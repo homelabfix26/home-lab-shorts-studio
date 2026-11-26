@@ -6,8 +6,7 @@ if (( EUID == 0 )) || command -v sudo >/dev/null; then
     admin=()
     if (( EUID != 0 )); then admin=(sudo); fi
     "${admin[@]}" apt-get update
-    "${admin[@]}" apt-get install -y ffmpeg imagemagick build-essential pkg-config \
-        libcairo2-dev libpango1.0-dev python3-dev python3-venv
+    "${admin[@]}" apt-get install -y ffmpeg imagemagick python3-venv
     /usr/bin/python3 -m venv .venv
 else
     # Bez uprawnień administratora pobierz zależności binarne z conda-forge.
@@ -23,7 +22,7 @@ else
         curl -fsSL "https://micro.mamba.pm/api/micromamba/$platform/latest" |
             tar -xj -C "$MAMBA_ROOT_PREFIX" bin/micromamba
     fi
-    packages=(python=3.12 pip manimpango pycairo)
+    packages=(python=3.12 pip)
     if ! command -v ffmpeg >/dev/null || ! command -v ffprobe >/dev/null; then packages+=(ffmpeg); fi
     if ! command -v magick >/dev/null && ! command -v convert >/dev/null; then packages+=(imagemagick); fi
     action=create
@@ -32,6 +31,6 @@ else
 fi
 
 export PATH="$PWD/.venv/bin:$PATH"
-python -m pip install manim edge-tts faster-whisper moviepy pillow numpy
+python -m pip install edge-tts faster-whisper moviepy pillow numpy
 python -m pip check
-python -c 'import manim, edge_tts, faster_whisper, moviepy, PIL, numpy'
+python -c 'import edge_tts, faster_whisper, moviepy, PIL, numpy'
